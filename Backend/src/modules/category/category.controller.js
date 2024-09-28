@@ -1,34 +1,46 @@
 import { categoryModel } from "../../../databases/models/category.model.js";
 import slugify from "slugify";
-export const createCategory = async (req, res) => {
+import { AppError } from "../../../utils/AppError.js";
+
+// function to handle error
+const catchError=(fn)=>{
+  return (req,res,next)=>{
+    fn(req,res,next).catch((err)=>{
+      next(err)
+    })
+  }
+}
+export const createCategory = catchError(async (req, res) => {
   const { name } = req.body;
   let result = new categoryModel({ name,slug:slugify(name) });
   await result.save();
 
   res.json({ msg: "success", result });
-};
+});
 
-export const getAllCategory = async (req, res) => {
+export const getAllCategory = catchError(async (req, res) => {
   let result = await categoryModel.find({});
   res.json({ msg: "success", result });
-};
-export const getCategory = async (req, res) => {
+});
+export const getCategory = async (req, res,next) => {
   const { id } = req.params;
   let result = await categoryModel.findById(id);
-  res.json({ msg: "success", result });
+  !result && next(new AppError(`category not found`,404))
+   result && res.json({ msg: "success", result });
 };
 
-export const deleteCategory = async (req, res) => {
+export const deleteCategory = catchError(async (req, res,next) => {
   const { id } = req.params;
   let result = await categoryModel.findByIdAndDelete(id);
-  res.json({ msg: "success", result });
-};
+  !result && next(new AppError(`category not found`, 404));
+  result && res.json({ msg: "success", result });
+});
 
-export const updateCategory = async (req, res) => {
+export const updateCategory =catchError( async (req, res,next) => {
   const { id } = req.params;
   const { name } = req.body;
-  let result = await categoryModel.findByIdAndUpdate(id, { name ,slug:slugify(name)});
-  res.json({ msg: "success", result });
-};
-
+  let result = await categoryModel.findByIdAndUpdate(id, { name ,slug:slugify(name)},{new:true});
+  !result && next(new AppError(`category not found`,404))
+  result && res.json({ msg: "success", result });
+});
 
