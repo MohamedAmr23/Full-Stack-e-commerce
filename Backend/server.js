@@ -6,6 +6,7 @@ import morgan from 'morgan'
 import { AppError } from './utils/AppError.js'
 import subCategoryRouter from './src/modules/subCategory/subCategory.router.js'
 import brandRouter from './src/modules/brands/brand.router.js'
+import productRouter from './src/modules/product/product.router.js'
 dotenv.config()
 const app = express()
 app.use(express.json())
@@ -13,6 +14,7 @@ app.use(morgan('dev'))
 app.use('/api/v1/categories',categoryRouter)
 app.use('/api/v1/subcategories',subCategoryRouter)
 app.use('/api/v1/brands',brandRouter)
+app.use('/api/v1/products',productRouter)
 const port = process.env.PORT || 8000
 
 app.get('/', (req, res) => res.send('Hello World!'))
