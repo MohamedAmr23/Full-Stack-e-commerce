@@ -2,9 +2,10 @@
 import slugify from 'slugify'
 import {brandModel} from '../../../databases/models/brand.model.js'
 import { AppError } from '../../../utils/AppError.js'
+import { deleteOne } from '../handles/factor.handler.js'
 
 // function to handle error
-const catchError=(fn)=>{
+export const catchError=(fn)=>{
     return (req,res,next)=>{
       fn(req,res,next).catch((err)=>{
         next(err)
@@ -38,9 +39,4 @@ export const updateBrand=catchError(async(req,res,next)=>{
     !result && next(new AppError(`brand not found`,404))
     result && res.json({ msg: "update success", result });
 })
-export const deleteBrand=catchError(async(req,res,next)=>{
-    const {id}=req.params
-    let result=await brandModel.findByIdAndDelete(id)
-    !result && next(new AppError(`brand not found`,404))
-    result && res.json({ msg: "delete success", result });
-})
+export const deleteBrand=deleteOne(brandModel)

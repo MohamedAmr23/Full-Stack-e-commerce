@@ -1,6 +1,7 @@
 import { categoryModel } from "../../../databases/models/category.model.js";
 import slugify from "slugify";
 import { AppError } from "../../../utils/AppError.js";
+import { deleteOne } from "../handles/factor.handler.js";
 
 // function to handle error
 const catchError=(fn)=>{
@@ -29,12 +30,7 @@ export const getCategory = async (req, res,next) => {
    result && res.json({ msg: "success", result });
 };
 
-export const deleteCategory = catchError(async (req, res,next) => {
-  const { id } = req.params;
-  let result = await categoryModel.findByIdAndDelete(id);
-  !result && next(new AppError(`category not found`, 404));
-  result && res.json({ msg: "success", result });
-});
+export const deleteCategory =deleteOne(categoryModel)
 
 export const updateCategory =catchError( async (req, res,next) => {
   const { id } = req.params;

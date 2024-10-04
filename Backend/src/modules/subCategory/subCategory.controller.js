@@ -1,6 +1,7 @@
 import { subCategoryModel } from "../../../databases/models/subcategory.model.js"
 import { AppError } from "../../../utils/AppError.js"
 import slugify from "slugify"
+import { deleteOne } from "../handles/factor.handler.js"
 const catchError=(fn)=>{
     return (req,res,next)=>{
         fn(req,res,next).catch((err)=>{
@@ -44,9 +45,4 @@ export const updateSubCategory=catchError(async(req,res,next)=>{
     result && res.json({msg:'update success',result})
 })
 
-export const deleteSubCategory=catchError(async(req,res,next)=>{
-    const {id}=req.params
-    let result=await subCategoryModel.findByIdAndDelete(id)
-    !result && next(new AppError(`subcategory not found to be deleted`,404))
-    result && res.json({msg:'delete success',result})
-})
+export const deleteSubCategory=deleteOne(subCategoryModel)
