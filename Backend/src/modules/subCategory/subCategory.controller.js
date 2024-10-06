@@ -2,6 +2,7 @@ import { subCategoryModel } from "../../../databases/models/subcategory.model.js
 import { AppError } from "../../../utils/AppError.js"
 import slugify from "slugify"
 import { deleteOne } from "../handles/factor.handler.js"
+import { ApiFeatures } from "../../../utils/apiFeatures.js"
 const catchError=(fn)=>{
     return (req,res,next)=>{
         fn(req,res,next).catch((err)=>{
@@ -20,14 +21,22 @@ export const createSubCategory=catchError(async(req,res)=>{
 
 })
 
-export const getAllSubCategories=catchError(async(req,res)=>{
-    let filter={}
-    if(req.params.categoryId){
-        filter={category:req.params.categoryId}
-    }
-    let result=await  subCategoryModel.find(filter)
-    res.json({msg:'success',result})
-})
+export const getAllSubCategories = catchError(async (req, res) => {
+  let filter = {};
+  if (req.params.categoryId) {
+    filter = { category: req.params.categoryId };
+  }
+  // let result=await  subCategoryModel.find(filter)
+  // res.json({msg:'success',result})
+  let apiFeatures = new ApiFeatures(subCategoryModel.find(filter), req.query)
+    .paginate()
+    .filter()
+    .sort()
+    .search()
+    .fields();
+  let result = await apiFeatures.mongoosesQuery;
+  res.json({ msg: "success", page: apiFeatures.page, result });
+});
 
 
 export const getSubCategory=catchError(async(req,res,next)=>{

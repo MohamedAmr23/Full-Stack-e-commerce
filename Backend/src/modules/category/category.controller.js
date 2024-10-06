@@ -2,6 +2,7 @@ import { categoryModel } from "../../../databases/models/category.model.js";
 import slugify from "slugify";
 import { AppError } from "../../../utils/AppError.js";
 import { deleteOne } from "../handles/factor.handler.js";
+import { ApiFeatures } from "../../../utils/apiFeatures.js";
 
 // function to handle error
 const catchError=(fn)=>{
@@ -20,8 +21,10 @@ export const createCategory = catchError(async (req, res) => {
 });
 
 export const getAllCategory = catchError(async (req, res) => {
-  let result = await categoryModel.find({});
-  res.json({ msg: "success", result });
+  let apiFeatures= new ApiFeatures(categoryModel.find(),req.query)
+  .paginate().filter().sort().search().fields()
+  let result = await apiFeatures.mongoosesQuery;
+  res.status(200).json({ msg: "success", page:apiFeatures.page, result });
 });
 export const getCategory = async (req, res,next) => {
   const { id } = req.params;

@@ -3,6 +3,7 @@ import slugify from 'slugify'
 import {brandModel} from '../../../databases/models/brand.model.js'
 import { AppError } from '../../../utils/AppError.js'
 import { deleteOne } from '../handles/factor.handler.js'
+import { ApiFeatures } from '../../../utils/apiFeatures.js'
 
 // function to handle error
 export const catchError=(fn)=>{
@@ -22,8 +23,10 @@ export const createBrand=catchError(async(req,res)=>{
 })
 
 export const getAllBrand=catchError(async(req,res)=>{
-    let result=await brandModel.find({})
-    res.json({msg:"success",result})
+  let apiFeatures= new ApiFeatures(brandModel.find(),req.query)
+  .paginate().filter().sort().search().fields()
+  let result = await apiFeatures.mongoosesQuery;
+  res.json({ msg: "success", page:apiFeatures.page, result });
 })
 export const getBrand=catchError(async(req,res,next)=>{
     const {id}=req.params
