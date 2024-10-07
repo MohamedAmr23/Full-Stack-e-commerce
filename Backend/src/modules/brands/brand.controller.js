@@ -15,9 +15,9 @@ export const catchError=(fn)=>{
   }
 
 export const createBrand=catchError(async(req,res)=>{
-    const {name}=req.body
-
-    let result=new brandModel({name,slug:slugify(name)})
+    req.body.slug=slugify(req.body.name)
+    req.body.logo=req.file.filename
+    let result=new brandModel(req.body)
     await result.save()
     res.json({msg:"add brand success",result})
 })
@@ -37,9 +37,12 @@ export const getBrand=catchError(async(req,res,next)=>{
 
 export const updateBrand=catchError(async(req,res,next)=>{
     const {id}=req.params
-    const {name}=req.body
-    let result=await brandModel.findByIdAndUpdate(id,{ name ,slug:slugify(name)},{new:true})
+    req.body.slug=slugify(req.body.name)
+    req.body.logo=req.file.filename
+    let brand=await brandModel.findById(id)
+    let result=await brandModel.findByIdAndUpdate(id,req.body,{new:true})
     !result && next(new AppError(`brand not found`,404))
+    if(brand.name===name.trim())  return res.status(400).json({ msg: "You haven't updated anything, the name is the same!" });
     result && res.json({ msg: "update success", result });
 })
 export const deleteBrand=deleteOne(brandModel)

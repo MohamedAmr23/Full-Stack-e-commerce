@@ -1,18 +1,41 @@
 import { Router } from "express";
-import { createCategory, deleteCategory, getAllCategory, getCategory, updateCategory } from "./category.controller.js";
-import subCategoryRouter from '../subCategory/subCategory.router.js'
+import {
+  createCategory,
+  deleteCategory,
+  getAllCategory,
+  getCategory,
+  updateCategory,
+} from "./category.controller.js";
+import subCategoryRouter from "../subCategory/subCategory.router.js";
+import { validation } from "../../middelwares/validation.js";
+import {
+  createCategorySchema,
+  getAndDeleteCategorySchema,
+  updateCategorySchema,
+} from "./category.validation.js";
+import { uploadSindleFile } from "../../middelwares/fileUpload.js";
 
-const categoryRouter=Router()
+const categoryRouter = Router();
 
-categoryRouter.use('/:categoryId/subcategories',subCategoryRouter)
+// merge params
+categoryRouter.use("/:categoryId/subcategories", subCategoryRouter);
 
-categoryRouter.route("/").post(createCategory).get(getAllCategory);
+categoryRouter
+  .route("/")
+  .post(
+    uploadSindleFile("image", "category"),
+    validation(createCategorySchema),
+    createCategory
+  )
+  .get(getAllCategory);
 categoryRouter
   .route("/:id")
-  .get(getCategory)
-  .delete(deleteCategory)
-  .put(updateCategory);
+  .get(validation(getAndDeleteCategorySchema), getCategory)
+  .delete(validation(getAndDeleteCategorySchema), deleteCategory)
+  .put(
+    uploadSindleFile("image", "category"),
+    validation(updateCategorySchema),
+    updateCategory
+  );
 
-
-
-export default categoryRouter
+export default categoryRouter;

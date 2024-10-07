@@ -41,9 +41,11 @@ export const deleteProduct = deleteOne(productModel);
 export const updateProduct = catchError(async (req, res, next) => {
   const { id } = req.params;
   if (req.body.title) req.body.slug = slugify(req.body.title);
+  let product=await productModel.findById(id)
   let result = await productModel.findByIdAndUpdate(id, req.body, {
     new: true,
   });
   !result && next(new AppError(`product not found`, 404));
+  if(product.title===req.body.title) return res.status(400).json({ msg: "You haven't updated anything, the name is the same!" });
   result && res.json({ msg: "success", result });
 });

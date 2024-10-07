@@ -11,6 +11,7 @@ dotenv.config()
 const app = express()
 app.use(express.json())
 app.use(morgan('dev'))
+app.use(express.static('uploads'))
 app.use('/api/v1/categories',categoryRouter)
 app.use('/api/v1/subcategories',subCategoryRouter)
 app.use('/api/v1/brands',brandRouter)
@@ -29,9 +30,6 @@ app.use((err,req,res,next)=>{
 })
 dbConnection()
 app.listen(port, () => console.log(`Example app listening on port ${port}!`))
-
-
-
 
 process.on('unhandledRejection',(err)=>{
     console.log(`unhandledRejection ${err}`)

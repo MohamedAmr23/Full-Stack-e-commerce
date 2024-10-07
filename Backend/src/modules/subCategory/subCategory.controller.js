@@ -49,8 +49,10 @@ export const getSubCategory=catchError(async(req,res,next)=>{
 export const updateSubCategory=catchError(async(req,res,next)=>{
     const {id}=req.params
     const {name,category}=req.body
-    let result=await subCategoryModel.findByIdAndUpdate(id,{name,category,slug:slugify(name)},{new:true})
+    const subCategory=await subCategoryModel.findById(id)
+    let result=await subCategoryModel.findByIdAndUpdate(id,{name:name.trim(),category,slug:slugify(name)},{new:true})
     !result && next(new AppError(`subcategory not found to be updated`,404))
+    if(subCategory.name===name.trim())return res.status(400).json({ msg: "You haven't updated anything, the name is the same!" });
     result && res.json({msg:'update success',result})
 })
 
