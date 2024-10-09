@@ -15,7 +15,10 @@ const catchError = (fn) => {
 
 export const createProduct = catchError(async (req, res) => {
   req.body.slug = slugify(req.body.title);
+  req.body.imgCover=req.files.imgCover[0].filename
+  req.body.images=req.files.images.map((obj)=>obj.filename)
   let result = new productModel(req.body);
+
   await result.save();
 
   res.json({ msg: "success", result });

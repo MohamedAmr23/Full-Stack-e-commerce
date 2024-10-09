@@ -9,6 +9,7 @@ import brandRouter from './src/modules/brands/brand.router.js'
 import productRouter from './src/modules/product/product.router.js'
 dotenv.config()
 const app = express()
+app.use(express.static('uploads'))
 app.use(express.json())
 app.use(morgan('dev'))
 app.use(express.static('uploads'))
