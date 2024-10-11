@@ -53,7 +53,9 @@ export const deleteUser = deleteOne(userModel);
 
 export const changeUserPassword = catchError(async (req, res, next) => {
   const { id } = req.params;
+  req.body.passwordChangedAt=Date.now()
   let result = await userModel.findByIdAndUpdate(id, req.body, { new: true });
   !result && next(new AppError(`user not found`, 404));
   result && res.json({ msg: "change success", result });
 });
+

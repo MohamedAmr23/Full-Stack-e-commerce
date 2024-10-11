@@ -12,6 +12,7 @@ import {
   getAndDeleteProductSchema,
 } from "./product.validation.js";
 import { uploadMixOfFiles } from "../../middelwares/fileUpload.js";
+import { allowTo, protectedRoutes } from "../auth/auth.controller.js";
 
 const productRouter = Router();
 
@@ -21,12 +22,12 @@ let fieldsArray=[
 ];
 productRouter
   .route("/")
-  .post(uploadMixOfFiles(fieldsArray,'product'),validation(createProductSchema), createProduct)
+  .post(protectedRoutes,allowTo('admin','user'),uploadMixOfFiles(fieldsArray,'product'),validation(createProductSchema), createProduct)
   .get(getAllProduct);
 productRouter
   .route("/:id")
   .get(validation(getAndDeleteProductSchema), getProduct)
-  .delete(validation(getAndDeleteProductSchema), deleteProduct)
-  .put(updateProduct);
+  .delete(protectedRoutes,allowTo('admin'),validation(getAndDeleteProductSchema), deleteProduct)
+  .put(protectedRoutes,allowTo('admin'),updateProduct);
 
 export default productRouter;

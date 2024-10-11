@@ -13,18 +13,35 @@ import {
   updateBrandSchema,
 } from "./brand.validation.js";
 import { uploadSindleFile } from "../../middelwares/fileUpload.js";
+import { allowTo, protectedRoutes } from "../auth/auth.controller.js";
 
 const brandRouter = Router();
 
 brandRouter
   .route("/")
-  .post(uploadSindleFile('logo','brand'),validation(createBrandSchema), createBrand)
+  .post(
+    protectedRoutes,
+    allowTo("admin"),
+    uploadSindleFile("logo", "brand"),
+    validation(createBrandSchema),
+    createBrand
+  )
   .get(getAllBrand);
 
 brandRouter
   .route("/:id")
   .get(validation(getAndDeleteBrandSchema), getBrand)
-  .put(validation(updateBrandSchema), updateBrand)
-  .delete(validation(getAndDeleteBrandSchema), deleteBrand);
+  .put(
+    protectedRoutes,
+    allowTo("admin"),
+    validation(updateBrandSchema),
+    updateBrand
+  )
+  .delete(
+    protectedRoutes,
+    allowTo("admin"),
+    validation(getAndDeleteBrandSchema),
+    deleteBrand
+  );
 
 export default brandRouter;

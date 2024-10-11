@@ -36,3 +36,30 @@ export const signIn = catchError(async (req, res, next) => {
   }
   next(new AppError("incorrect email or password", 401));
 });
+
+
+export const protectedRoutes=catchError(async(req,res,next)=>{
+  let { token }=req.headers
+  if(!token) return next(new AppError('token not found',401))
+
+  let decoded=await jwt.verify(token,'mohamed')  
+
+  let user=await userModel.findById(decoded.userId)
+  if(!user) return next(new AppError('invalid token',401)) 
+
+  if(user.passwordChangedAt){
+    let changePasswordDate=parseInt(user.passwordChangedAt.getTime() / 1000)
+    if(changePasswordDate > decoded.iat)  return next(new AppError('invalid token',401))
+  }  
+   req.user=user
+   next() 
+})
+
+
+export const allowTo=(...roles)=>{
+
+  return catchError(async (req,res,next)=>{
+    if(!roles.includes(req.user.role))  return next(new AppError('you are not authorized to access this route you are '+ req.user.role,401))
+      next()
+  }) 
+}
