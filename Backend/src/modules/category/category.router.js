@@ -14,6 +14,7 @@ import {
   updateCategorySchema,
 } from "./category.validation.js";
 import { uploadSindleFile } from "../../middelwares/fileUpload.js";
+import { allowTo, protectedRoutes } from "../auth/auth.controller.js";
 
 const categoryRouter = Router();
 
@@ -23,6 +24,8 @@ categoryRouter.use("/:categoryId/subcategories", subCategoryRouter);
 categoryRouter
   .route("/")
   .post(
+    protectedRoutes,
+    allowTo("admin"),
     uploadSindleFile("image", "category"),
     validation(createCategorySchema),
     createCategory
@@ -31,8 +34,15 @@ categoryRouter
 categoryRouter
   .route("/:id")
   .get(validation(getAndDeleteCategorySchema), getCategory)
-  .delete(validation(getAndDeleteCategorySchema), deleteCategory)
+  .delete(
+    protectedRoutes,
+    allowTo("admin"),
+    validation(getAndDeleteCategorySchema),
+    deleteCategory
+  )
   .put(
+    protectedRoutes,
+    allowTo("admin"),
     uploadSindleFile("image", "category"),
     validation(updateCategorySchema),
     updateCategory

@@ -18,8 +18,16 @@ const reviewSchema = mongoose.Schema(
         type:mongoose.Types.ObjectId,
         ref:"product"
     },
+    rating:{
+      type:Number,
+      min:1,
+      max:5
+    }
   },
   { timestamps: true }
 );
 
+reviewSchema.pre(/^find/,function(){
+  this.populate('user','name')
+})
 export const reviewModel=mongoose.model('review',reviewSchema)

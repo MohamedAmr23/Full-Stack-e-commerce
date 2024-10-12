@@ -56,10 +56,16 @@ export const protectedRoutes=catchError(async(req,res,next)=>{
 })
 
 
-export const allowTo=(...roles)=>{
-
-  return catchError(async (req,res,next)=>{
-    if(!roles.includes(req.user.role))  return next(new AppError('you are not authorized to access this route you are '+ req.user.role,401))
-      next()
-  }) 
-}
+export const allowTo = (...roles) => {
+  return catchError(async (req, res, next) => {
+    if (!roles.includes(req.user.role))
+      return next(
+        new AppError(
+          "you are not authorized to access this route you are " +
+            req.user.role,
+          401
+        )
+      );
+    next();
+  });
+};
