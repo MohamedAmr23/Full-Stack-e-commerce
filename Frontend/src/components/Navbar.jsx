@@ -12,7 +12,7 @@ const Navbar = () => {
     <div className="collapse navbar-collapse" id="navbarSupportedContent">
       <ul className="navbar-nav me-auto mb-2 mb-lg-0">
         <li className="nav-item">
-          <a className="nav-link active" aria-current="page" href="#">Home</a>
+          <a className="nav-link " aria-current="page" href="#">Home</a>
         </li>
         <li className="nav-item">
           <a className="nav-link" href="#">Product</a>
@@ -25,7 +25,7 @@ const Navbar = () => {
         </li>
       </ul>
       <ul className="navbar-nav ms-auto mb-2 mb-lg-0 mt-2">
-        <a type="button" className="btn  position-relative me-3">
+        <a type="button" className="btn position-relative me-3">
             Cart <i className="fa-solid fa-cart-shopping"></i>
             <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-success">
                 10
