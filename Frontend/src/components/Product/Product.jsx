@@ -1,34 +1,29 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-import Slider from "react-slick";
-const Product = () => {
-  const [allProduct, setAllProduct] = useState([]);
-  const getAllProducts = async () => {
-    let { data } = await axios.get(
-      `https://ecommerce.routemisr.com/api/v1/products`
-    );
-    setAllProduct(data.data);
-  };
-  useEffect(() => {
-    getAllProducts();
-  }, []);
+import React from 'react'
+
+const Product = ({Products}) => {
+    console.log(Products)
   return (
-    <div className="my-5 container">
-    <h3 className="text-center mb-5">All Product</h3>
+    <>
+        {Products.map((item)=>{
+            return <div key={item._id} className='col-md-2 cursor-pointer'>
+              <div className='product'>
+                <img src={item.imageCover} className='w-100'/>
+                    <h6 className='text-main'>{item.category.name}</h6>
+                    <p className='fw-bolder'>{item.title.split(' ').slice(0,2).join('')}</p>
+                    <div className='d-flex justify-content-between align-items-center my-4'>
+                        <span>{item.price} EGP</span>
+                        <div>
+                            <i className='fas fa-star rating-color'/>
+                            {item.ratingsAverage}
+                        </div>
+                    </div>
+                    <button className='btn bg-main text-white w-100 '>Add To Cart</button>
+              </div>
+            </div>
+        })}
+    </>
+  )
+}
 
-    {allProduct.map((item) => (
-      <div key={item._id}>
-        <img
-          src={item.image}
-          alt=""
-          className="w-200 mb-2 cursor-pointer"
-          height={300}
-        />
-        {/* <h5>{item.name}</h5> */}
-      </div>
-    ))}
-</div>
-  );
-};
-
-export default Product;
+export default Product
+//   

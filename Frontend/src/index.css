@@ -26,14 +26,14 @@ a , a:hover{
 }
 .product:hover
 {
-    box-shadow: var(--shadow);
-    border: solid 1px var(--main-color);
+    cursor: pointer;
 }
 .product .btn 
 {
     transition: transform 1s , opacity 1s;
     transform: translateY(100%);
     opacity: 0;
+    margin-bottom: 20px;
 }
 .product:hover .btn 
 {

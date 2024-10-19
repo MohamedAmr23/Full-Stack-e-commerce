@@ -1,7 +1,7 @@
 import Navbar from './components/Navbar.jsx'
 import MainSlider from './components/MainSlider/MainSlider.jsx'
 import CategorySlider from './components/CategorySlider/CategorySlider.jsx'
-import Product from './components/Product/Product.jsx'
+import Products from './components/Product/Products.jsx'
 
 const App = () => {
   return (
@@ -9,7 +9,7 @@ const App = () => {
       <Navbar/>
       <MainSlider/>
       <CategorySlider/>
-      <Product/>
+      <Products/>
     </>
   )
 }
