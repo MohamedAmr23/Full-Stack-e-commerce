@@ -1,15 +1,9 @@
-import Navbar from './components/Navbar.jsx'
-import MainSlider from './components/MainSlider/MainSlider.jsx'
-import CategorySlider from './components/CategorySlider/CategorySlider.jsx'
-import Products from './components/Product/Products.jsx'
+import Routes from './Router/Routes.jsx'
 
 const App = () => {
   return (
     <>
-      <Navbar/>
-      <MainSlider/>
-      <CategorySlider/>
-      <Products/>
+     <Routes/>
     </>
   )
 }

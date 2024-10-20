@@ -22,7 +22,7 @@ const CategorySlider = () => {
     autoplay: true,
   };
   return (
-    <div className="my-5 container">
+    <div className="my-5 container none ">
         <h3 className="text-center mb-5">Shop popular categories</h3>
       <Slider {...settings} autoplaySpeed={2000}>
         {categories.map((item) => (
@@ -30,7 +30,7 @@ const CategorySlider = () => {
             <img
               src={item.image}
               alt=""
-              className="w-200 mb-2 cursor-pointer"
+              className="w-100 mb-2 cursor-pointer "
               height={300}
             />
             <h5>{item.name}</h5>
