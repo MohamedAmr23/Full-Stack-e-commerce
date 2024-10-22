@@ -5,6 +5,8 @@ import Products from "../components/Product/Products.jsx";
 import Categories from '../pages/Categories.jsx'
 import Brands from '../pages/Brands.jsx'
 import ProductDetails from '../pages/ProductDetails.jsx'
+import Login from "../pages/Login.jsx";
+import Register from "../pages/Register.jsx";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -29,6 +31,14 @@ const router = createBrowserRouter([
         {
             path:'/product-details/:id',
             element:<ProductDetails/>
+        },
+        {
+            path:'/login',
+            element:<Login/>
+        },
+        {
+            path:'/register',
+            element:<Register/>
         },
     ],
   },

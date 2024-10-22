@@ -45,7 +45,10 @@ const Navbar = () => {
             </li>
           </ul>
           <ul className="navbar-nav ms-auto mb-2 mb-lg-0 mt-2">
-            <NavLink type="button" className="btn border-0 position-relative me-3">
+            <NavLink
+              type="button"
+              className="btn border-0 position-relative me-3"
+            >
               Cart <i className="fa-solid fa-cart-shopping"></i>
               <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-success">
                 10
@@ -53,13 +56,13 @@ const Navbar = () => {
               </span>
             </NavLink>
             <li className="nav-item">
-              <NavLink className="nav-link" to="/">
-                Login
+              <NavLink className="nav-link" to="/register">
+                Register
               </NavLink>
             </li>
             <li className="nav-item">
-              <NavLink className="nav-link" to="/">
-                Logout
+              <NavLink className="nav-link" to="/login">
+                Login
               </NavLink>
             </li>
           </ul>
