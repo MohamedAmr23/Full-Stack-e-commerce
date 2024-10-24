@@ -1,5 +1,5 @@
 import Routes from './Router/Routes.jsx'
-
+import 'react-toastify/dist/ReactToastify.css';
 const App = () => {
   return (
     <>

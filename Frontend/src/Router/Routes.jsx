@@ -7,6 +7,9 @@ import Brands from '../pages/Brands.jsx'
 import ProductDetails from '../pages/ProductDetails.jsx'
 import Login from "../pages/Login.jsx";
 import Register from "../pages/Register.jsx";
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 const router = createBrowserRouter([
   {
     path: "/",
@@ -48,6 +51,7 @@ const Routes = () => {
   return (
     <div>
         <RouterProvider router={router}/>
+        <ToastContainer />
     </div>
   )
 }
