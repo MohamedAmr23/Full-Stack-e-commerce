@@ -3,7 +3,7 @@ import { useFormik } from "formik";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import {ThreeDot} from 'react-loading-indicators'
+// import {ThreeDot} from 'react-loading-indicators'
 import * as Yup from "yup";
 const Register = () => {
   const navigate = useNavigate();
@@ -127,8 +127,8 @@ const Register = () => {
           type="submit"
           className="btn bg-main text-white"
         >
-          {/* <i className="fas fa-spinner fa-spin"></i> */}
-          {isLoading ? <ThreeDot color="white" size="medium" text="" textColor="" />: "Register"}
+          {/* <ThreeDot color="white" size="medium" text="" textColor="" /> */}
+          {isLoading ? <i className="fas fa-spinner fa-spin"></i>: "Register"}
         </button>
         <button
           disabled={!registerFormik.dirty}

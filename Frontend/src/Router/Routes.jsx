@@ -51,7 +51,7 @@ const Routes = () => {
   return (
     <div>
         <RouterProvider router={router}/>
-        <ToastContainer />
+        <ToastContainer theme="colored" />
     </div>
   )
 }
