@@ -1,6 +1,7 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import MainPage from "../pages/MainPage.jsx";
 import Home from "../pages/Home.jsx";
+import Cart from "../pages/Cart.jsx";
 import Products from "../components/Product/Products.jsx";
 import Categories from '../pages/Categories.jsx'
 import Brands from '../pages/Brands.jsx'
@@ -10,6 +11,7 @@ import Register from "../pages/Register.jsx";
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import ProtectedRoutes from "../components/ProtectedRoutes.jsx";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -17,30 +19,34 @@ const router = createBrowserRouter([
     children: [
         {
             index:1,
-            element:<Home/>
+            element:<ProtectedRoutes><Home/></ProtectedRoutes> 
         },
         {
-            path:'/products',
-            element:<Products/>
+            path:'products',
+            element:<ProtectedRoutes><Products/></ProtectedRoutes>
         },
         {
-            path:'/categories',
-            element:<Categories/>
+            path:'cart',
+            element: <ProtectedRoutes><Cart/></ProtectedRoutes>
         },
         {
-            path:'/brands',
-            element:<Brands/>
+            path:'categories',
+            element:<ProtectedRoutes><Categories/></ProtectedRoutes> 
         },
         {
-            path:'/product-details/:id',
-            element:<ProductDetails/>
+            path:'brands',
+            element:<ProtectedRoutes><Brands/></ProtectedRoutes>
         },
         {
-            path:'/login',
+            path:'product-details/:id',
+            element:<ProtectedRoutes><ProductDetails/></ProtectedRoutes> 
+        },
+        {
+            path:'login',
             element:<Login/>
         },
         {
-            path:'/register',
+            path:'register',
             element:<Register/>
         },
     ],

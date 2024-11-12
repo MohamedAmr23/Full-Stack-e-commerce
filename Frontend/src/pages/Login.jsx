@@ -1,11 +1,13 @@
 import axios from "axios";
 import { useFormik } from "formik";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 // import {ThreeDot} from 'react-loading-indicators'
 import * as Yup from "yup";
+import { UserContext } from "../context/UserContext.jsx";
 const Login = () => {
+  let {setUserData} = useContext(UserContext)
   const navigate = useNavigate();
   const [isLoading, setisLoading] = useState(false);
   const validationSchema = Yup.object({
@@ -34,6 +36,7 @@ const Login = () => {
             setisLoading(false);
             toast.success("login successfully");
             navigate("/");
+            setUserData(data.data.token)
           }
         })
         .catch((error) => {

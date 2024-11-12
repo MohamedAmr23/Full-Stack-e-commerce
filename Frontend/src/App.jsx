@@ -1,11 +1,11 @@
-import Routes from './Router/Routes.jsx'
-import 'react-toastify/dist/ReactToastify.css';
+import Routes from "./Router/Routes.jsx";
+import "react-toastify/dist/ReactToastify.css";
 const App = () => {
   return (
     <>
-     <Routes/>
+        <Routes />
     </>
-  )
-}
+  );
+};
 
-export default App
+export default App;
