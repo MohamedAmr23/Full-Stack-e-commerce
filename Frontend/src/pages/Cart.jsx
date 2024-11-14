@@ -130,7 +130,7 @@ import { CartContext } from "../context/CartContext.jsx";
 import Loading from "../components/Loading.jsx";
 
 const Cart = () => {
-  const { getCart, cart } = useContext(CartContext);
+  const { getCart, cart , updateProductCount , deleteCart} = useContext(CartContext);
 
   useEffect(() => {
     getCart();
@@ -168,14 +168,14 @@ const Cart = () => {
                     <td>{product.product.title}</td>
                     <td>
                       <div className="d-flex align-items-center">
-                        <button
+                        <button onClick={()=>updateProductCount(product.product.id,product.count - 1)}
                           className="btn btn-light btn-sm me-2"
                           type="button"
                         >
                           <i className="bi bi-dash-lg">-</i>
                         </button>
                         <span>{product.count}</span>
-                        <button
+                        <button onClick={()=>updateProductCount(product.product.id,product.count + 1)}
                           className="btn btn-light btn-sm ms-2"
                           type="button"
                         >
@@ -185,7 +185,7 @@ const Cart = () => {
                     </td>
                     <td>{product.price} EGY</td>
                     <td>
-                      <button className="btn btn-danger btn-sm">
+                      <button onClick={()=>deleteCart(product.product.id)} className="btn btn-danger btn-sm">
                         Remove
                       </button>
                     </td>
