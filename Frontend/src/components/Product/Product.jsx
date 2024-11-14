@@ -1,9 +1,11 @@
 import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import { AppContext } from "../../context/AppContext.jsx";
+import { CartContext } from "../../context/CartContext.jsx";
 
 const Product = ({ Products }) => {
   const {count,setCount}=useContext(AppContext)
+  let { addProduct } = useContext(CartContext)
   return (
     <>
       {Products.map((item) => {
@@ -24,7 +26,7 @@ const Product = ({ Products }) => {
                   </div>
                 </div>
               </Link>
-              <button onClick={()=>setCount(count+1)} className="btn bg-main text-white w-100 ">
+              <button onClick={()=>addProduct( item._id)} className="btn bg-main text-white w-100 ">
                 Add To Cart
               </button>
             </div>

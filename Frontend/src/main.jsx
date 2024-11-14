@@ -9,10 +9,13 @@ import App from "./App.jsx";
 import "./index.css";
 import "react-toastify/dist/ReactToastify.css";
 import UserContextProvider from "./context/UserContext.jsx";
+import CartContextProvider from "./context/CartContext.jsx";
 createRoot(document.getElementById("root")).render(
   // <StrictMode>
-  <UserContextProvider>
-    <App />
-  </UserContextProvider>
+  <CartContextProvider>
+    <UserContextProvider>
+      <App />
+    </UserContextProvider>
+  </CartContextProvider>
   // </StrictMode>,
 );
