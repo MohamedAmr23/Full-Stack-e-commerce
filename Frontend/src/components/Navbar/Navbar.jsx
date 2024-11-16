@@ -3,9 +3,11 @@ import logo from "../../assets/freshcart-logo.svg";
 import { NavLink, useNavigate } from "react-router-dom";
 import { AppContext } from "../../context/AppContext.jsx";
 import { UserContext } from "../../context/UserContext.jsx";
+import { CartContext } from "../../context/CartContext.jsx";
 const Navbar = () => {
   const { count } = useContext(AppContext);
   const { userData , setUserData} = useContext(UserContext);
+  const {cart} = useContext(CartContext)
   const navigate= useNavigate()
   const logOut=()=>{
     setUserData(null)
@@ -66,10 +68,11 @@ const Navbar = () => {
               <NavLink
                 type="button"
                 className="btn border-0 position-relative me-4"
+                to="cart"
               >
                 Cart <i className="fa-solid fa-cart-shopping"></i>
                 <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-success">
-                  {count}
+                  {cart?cart.numOfCartItems : 0}
                   <span className="visually-hidden">unread messages</span>
                 </span>
               </NavLink>

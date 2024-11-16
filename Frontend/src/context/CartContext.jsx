@@ -1,5 +1,5 @@
 import axios from "axios";
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
 export const CartContext = createContext();
@@ -76,7 +76,9 @@ export default function CartContextProvider({ children }) {
       console.log(err);
     }
   }
-
+  useEffect(()=>{
+    getCart()
+  },[])
   return (
     <CartContext.Provider
       value={{ updateProductCount, addProduct, getCart,deleteCart, cart }}
