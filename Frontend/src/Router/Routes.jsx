@@ -12,6 +12,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import ProtectedRoutes from "../components/ProtectedRoutes.jsx";
+import Checkout from "../components/Checkout.jsx";
+import AllOrders from "../components/AllOrders.jsx";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -40,6 +42,14 @@ const router = createBrowserRouter([
         {
             path:'product-details/:id',
             element:<ProtectedRoutes><ProductDetails/></ProtectedRoutes> 
+        },
+        {
+            path:'checkout',
+            element:<ProtectedRoutes><Checkout/></ProtectedRoutes> 
+        },
+        {
+            path:'product-details/:id',
+            element:<ProtectedRoutes><AllOrders/></ProtectedRoutes> 
         },
         {
             path:'login',

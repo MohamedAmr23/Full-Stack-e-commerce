@@ -26,6 +26,7 @@ export default function CartContextProvider({ children }) {
       console.log(err);
     }
   }
+  
   async function updateProductCount(productId, count) {
     if (count > 0) {
       try {
@@ -61,6 +62,24 @@ export default function CartContextProvider({ children }) {
       console.log(err);
     }
   }
+  async function checkout(shippingAddress) {
+    try {
+      let { data } = await axios.post(
+        `https://ecommerce.routemisr.com/api/v1/orders/checkout-session/${cart.data._id}?url=http://localhost:5173`,{
+          shippingAddress
+        },
+        {
+          headers: {
+            token: localStorage.getItem("token"),
+          },
+        }
+      );
+      // setCart(data);
+      window.location.href = data.session.url
+    } catch (err) {
+      console.log(err);
+    }
+  }
   async function deleteCart(productId) {
     try {
       let { data } = await axios.delete(
@@ -76,12 +95,28 @@ export default function CartContextProvider({ children }) {
       console.log(err);
     }
   }
+  async function clearCart() {
+    try {
+      let { data } = await axios.delete(
+        `https://ecommerce.routemisr.com/api/v1/cart`,
+        {
+          headers: {
+            token: localStorage.getItem("token"),
+          },
+        }
+      );
+      setCart(null);
+    } catch (err) {
+      console.log(err);
+    }
+  }
   useEffect(()=>{
     getCart()
   },[])
+
   return (
     <CartContext.Provider
-      value={{ updateProductCount, addProduct, getCart,deleteCart, cart }}
+      value={{ updateProductCount, addProduct, getCart,deleteCart, cart , checkout , clearCart}}
     >
       {children}
     </CartContext.Provider>

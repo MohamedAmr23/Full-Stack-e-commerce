@@ -1,14 +1,16 @@
-import React, { useContext } from "react";
+import  { useContext } from "react";
 import { Link } from "react-router-dom";
-import { AppContext } from "../../context/AppContext.jsx";
+// import { AppContext } from "../../context/AppContext.jsx";
 import { CartContext } from "../../context/CartContext.jsx";
+import useProducts from "../../Hooks/useProducts.jsx";
 
-const Product = ({ Products }) => {
-  const {count,setCount}=useContext(AppContext)
+const Product = () => {
+  // const {count,setCount}=useContext(AppContext)
   let { addProduct } = useContext(CartContext)
+  const {data} = useProducts()
   return (
     <>
-      {Products.map((item) => {
+      {data?.data.data.map((item) => {
         return (
           <div key={item._id} className="col-md-2 cursor-pointer">
             <div className="product">
