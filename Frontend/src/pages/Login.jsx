@@ -3,22 +3,26 @@ import { useFormik } from "formik";
 import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-// import {ThreeDot} from 'react-loading-indicators'
 import * as Yup from "yup";
 import { UserContext } from "../context/UserContext.jsx";
+
 const Login = () => {
-  let {setUserData} = useContext(UserContext)
+  const { setUserData } = useContext(UserContext);
   const navigate = useNavigate();
   const [isLoading, setisLoading] = useState(false);
+
+  // Validation Schema
   const validationSchema = Yup.object({
-    email: Yup.string().email().required(),
+    email: Yup.string().email("Invalid email address").required("Email is required"),
     password: Yup.string()
       .matches(
         /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
-        "password must conatin minimum 8 characters,uppercases , lowercases, numbers, and characters"
+        "Password must contain at least 8 characters, uppercase, lowercase, numbers, and special characters"
       )
-      .required(),
+      .required("Password is required"),
   });
+
+  // Formik setup
   const registerFormik = useFormik({
     initialValues: {
       email: "",
@@ -26,85 +30,83 @@ const Login = () => {
     },
     validationSchema,
     onSubmit: (values) => {
-      console.log(values);
       setisLoading(true);
       axios
         .post("https://ecommerce.routemisr.com/api/v1/auth/signin", values)
-        .then((data) => {
-          if (data.status == 200) {
-            localStorage.setItem('token',data.data.token)
-            setisLoading(false);
-            toast.success("login successfully");
-            navigate("/");
-            setUserData(data.data.token)
-          }
+        .then((response) => {
+          localStorage.setItem("token", response.data.token);
+          toast.success("Login successfully");
+          setUserData(response.data.token);
+          navigate("/");
         })
         .catch((error) => {
-          if (error.response.status == 409) {
-            setisLoading(false);
-            toast.error(error.response.data.message);
-          }
-        });
+          const message = error.response?.data?.message || "An error occurred";
+          toast.error(message);
+        })
+        .finally(() => setisLoading(false));
     },
   });
+
   return (
-    <div className="w-50 m-auto py-5">
-      <h2 className="mb-3">Login Now:</h2>
-      <form onSubmit={registerFormik.handleSubmit}>
-        <label htmlFor="email">Email</label>
-        <input
-          value={registerFormik.values.email}
-          type="email"
-          className="form-control my-2 mb-4"
-          name="email"
-          onChange={registerFormik.handleChange}
-          onBlur={registerFormik.handleBlur}
-          id="email"
-        />
-        {registerFormik.errors.email && registerFormik.touched.email ? (
-          <div className="alert alert-danger">
-            {registerFormik.errors.email}
+    <div className="container d-flex justify-content-center align-items-center min-vh-100">
+      <div className="card p-4 shadow-lg w-100" style={{ maxWidth: "500px" }}>
+        <h2 className="mb-4 text-center">Login</h2>
+        <form onSubmit={registerFormik.handleSubmit}>
+          {/* Email */}
+          <div className="mb-3">
+            <label htmlFor="email" className="form-label">
+              Email
+            </label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              className={`form-control ${registerFormik.errors.email && registerFormik.touched.email ? "is-invalid" : ""
+                }`}
+              value={registerFormik.values.email}
+              onChange={registerFormik.handleChange}
+              onBlur={registerFormik.handleBlur}
+            />
+            {registerFormik.errors.email && registerFormik.touched.email && (
+              <div className="invalid-feedback">{registerFormik.errors.email}</div>
+            )}
           </div>
-        ) : (
-          ""
-        )}
-        <label htmlFor="password">Password</label>
-        <input
-          value={registerFormik.values.password}
-          type="password"
-          className="form-control my-2 mb-4"
-          name="password"
-          onChange={registerFormik.handleChange}
-          onBlur={registerFormik.handleBlur}
-          id="password"
-        />
-        {registerFormik.errors.password && registerFormik.touched.password ? (
-          <div className="alert alert-danger">
-            {registerFormik.errors.password}
+
+          {/* Password */}
+          <div className="mb-4">
+            <label htmlFor="password" className="form-label">
+              Password
+            </label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              className={`form-control ${registerFormik.errors.password && registerFormik.touched.password ? "is-invalid" : ""
+                }`}
+              value={registerFormik.values.password}
+              onChange={registerFormik.handleChange}
+              onBlur={registerFormik.handleBlur}
+            />
+            {registerFormik.errors.password && registerFormik.touched.password && (
+              <div className="invalid-feedback">{registerFormik.errors.password}</div>
+            )}
           </div>
-        ) : (
-          ""
-        )}
-        <button
-          disabled={
-            !(registerFormik.isValid && registerFormik.dirty && !isLoading)
-          }
-          type="submit"
-          className="btn bg-main text-white"
-        >
-          {/* <ThreeDot color="white" size="medium" text="" textColor="" /> */}
-          {isLoading ? <i className="fas fa-spinner fa-spin"></i>: "Login"}
-        </button>
-        <button
-          disabled={!registerFormik.dirty}
-          className="btn bg-main text-white mx-3"
-          onClick={registerFormik.handleReset}
-        >
-          reset
-        </button>
-      </form>
+
+          {/* Submit Button */}
+          <div className="d-flex justify-content-between align-items-center">
+            <button
+              type="submit"
+              className="btn btn-primary w-100"
+              disabled={!registerFormik.isValid || !registerFormik.dirty || isLoading}
+            >
+              {isLoading ? <i className="fas fa-spinner fa-spin"></i> : "Login"}
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 };
 
 export default Login;
+

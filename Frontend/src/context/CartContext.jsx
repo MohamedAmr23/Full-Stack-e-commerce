@@ -19,7 +19,7 @@ export default function CartContextProvider({ children }) {
           },
         }
       );
-      console.log(data);
+      // console.log(data);
       toast.success(data.message);
       setCart(data);
     } catch (err) {

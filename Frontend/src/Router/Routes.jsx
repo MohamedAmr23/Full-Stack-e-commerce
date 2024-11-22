@@ -14,10 +14,12 @@ import 'react-toastify/dist/ReactToastify.css';
 import ProtectedRoutes from "../components/ProtectedRoutes.jsx";
 import Checkout from "../components/Checkout.jsx";
 import AllOrders from "../components/AllOrders.jsx";
+import Error from "../pages/Error.jsx";
 const router = createBrowserRouter([
   {
     path: "/",
     element: <MainPage />,
+    errorElement:<Error/>,
     children: [
         {
             index:1,

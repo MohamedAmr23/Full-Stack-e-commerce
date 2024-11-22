@@ -3,26 +3,34 @@ import { useFormik } from "formik";
 import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-// import {ThreeDot} from 'react-loading-indicators'
 import * as Yup from "yup";
 import { UserContext } from "../context/UserContext.jsx";
+
 const Register = () => {
-  let {setUserData}=useContext(UserContext)
+  const { setUserData } = useContext(UserContext);
   const navigate = useNavigate();
-  const [isLoading, setisLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+
   const validationSchema = Yup.object({
-    name: Yup.string().min(3).max(30).required(),
-    email: Yup.string().email().required(),
+    name: Yup.string()
+      .min(3, "Name must be at least 3 characters")
+      .max(30, "Name must be at most 30 characters")
+      .required("Name is required"),
+    email: Yup.string()
+      .email("Invalid email address")
+      .required("Email is required"),
     password: Yup.string()
       .matches(
         /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
-        "password must conatin minimum 8 characters,uppercases , lowercases, numbers, and characters"
+        "Password must contain at least 8 characters, uppercase, lowercase, numbers, and special characters"
       )
-      .required(),
+      .required("Password is required"),
     rePassword: Yup.string()
-      .oneOf([Yup.ref("password")], "password not match")
-      .required(),
+      .oneOf([Yup.ref("password")], "Passwords do not match")
+      .required("Password confirmation is required"),
   });
+
   const registerFormik = useFormik({
     initialValues: {
       name: "",
@@ -31,116 +39,153 @@ const Register = () => {
       rePassword: "",
     },
     validationSchema,
-    onSubmit: (values) => {
-      console.log(values);
-      setisLoading(true);
-      axios
-        .post("https://ecommerce.routemisr.com/api/v1/auth/signup", values)
-        .then((data) => {
-          if (data.status == 201) {
-            setisLoading(false);
-            localStorage.setItem('token',data.data.token)
-            toast.success("signup successfully");
-            navigate("/");
-            setUserData(data.data.token)
-          }
-        })
-        .catch((error) => {
-          if (error.response.status == 409) {
-            setisLoading(false);
-            toast.error(error.response.data.message);
-          }
-        });
+    onSubmit: async (values, { resetForm }) => {
+      try {
+        setIsLoading(true);
+        const { data, status } = await axios.post(
+          "https://ecommerce.routemisr.com/api/v1/auth/signup",
+          values
+        );
+
+        if (status === 201) {
+          localStorage.setItem("token", data.token);
+          setUserData(data.token);
+          toast.success("Signup successful!");
+          navigate("/");
+          resetForm(); 
+        }
+      } catch (error) {
+        if (error.response?.status === 409) {
+          toast.error(error.response.data.message);
+        } else {
+          toast.error("An error occurred. Please try again.");
+        }
+      } finally {
+        setIsLoading(false);
+      }
     },
   });
+
   return (
     <div className="w-50 m-auto py-5">
-      <h2 className="mb-3">Register Now:</h2>
+      <h2 className="mb-4">Register Now:</h2>
       <form onSubmit={registerFormik.handleSubmit}>
-        <label htmlFor="name">Name</label>
-        <input
-          value={registerFormik.values.name}
-          type="text"
-          className="form-control my-2 mb-4"
-          name="name"
-          onChange={registerFormik.handleChange}
-          onBlur={registerFormik.handleBlur}
-          id="name"
-        />
-        {registerFormik.errors.name && registerFormik.touched.name ? (
-          <div className="alert alert-danger">{registerFormik.errors.name}</div>
-        ) : (
-          ""
-        )}
-        <label htmlFor="email">Email</label>
-        <input
-          value={registerFormik.values.email}
-          type="email"
-          className="form-control my-2 mb-4"
-          name="email"
-          onChange={registerFormik.handleChange}
-          onBlur={registerFormik.handleBlur}
-          id="email"
-        />
-        {registerFormik.errors.email && registerFormik.touched.email ? (
-          <div className="alert alert-danger">
-            {registerFormik.errors.email}
-          </div>
-        ) : (
-          ""
-        )}
-        <label htmlFor="password">Password</label>
-        <input
-          value={registerFormik.values.password}
-          type="password"
-          className="form-control my-2 mb-4"
-          name="password"
-          onChange={registerFormik.handleChange}
-          onBlur={registerFormik.handleBlur}
-          id="password"
-        />
-        {registerFormik.errors.password && registerFormik.touched.password ? (
-          <div className="alert alert-danger">
-            {registerFormik.errors.password}
-          </div>
-        ) : (
-          ""
-        )}
-        <label htmlFor="rePassword">rePassword</label>
-        <input
-          value={registerFormik.values.rePassword}
-          type="password"
-          className="form-control my-2 mb-4"
-          name="rePassword"
-          onChange={registerFormik.handleChange}
-          onBlur={registerFormik.handleBlur}
-          id="rePassword"
-        />
-        {registerFormik.errors.rePassword &&
-        registerFormik.touched.rePassword ? (
-          <div className="alert alert-danger">
-            {registerFormik.errors.rePassword}
-          </div>
-        ) : (
-          ""
-        )}
-        <button
-          disabled={
-            !(registerFormik.isValid && registerFormik.dirty && !isLoading)
-          }
-          type="submit"
-          className="btn bg-main text-white"
-        >
-          {/* <ThreeDot color="white" size="medium" text="" textColor="" /> */}
-          {isLoading ? <i className="fas fa-spinner fa-spin"></i>: "Register"}
-        </button>
-        <button
-          disabled={!registerFormik.dirty}
-          className="btn bg-main text-white mx-3"
-          onClick={registerFormik.handleReset}
-        >
-          reset
-        </button>
+        {/* اسم المستخدم */}
+        <div className="mb-3">
+          <label htmlFor="name" className="form-label">
+            Name
+          </label>
+          <input
+            type="text"
+            id="name"
+            name="name"
+            className={`form-control ${
+              registerFormik.touched.name && registerFormik.errors.name
+                ? "is-invalid"
+                : ""
+            }`}
+            value={registerFormik.values.name}
+            onChange={registerFormik.handleChange}
+            onBlur={registerFormik.handleBlur}
+          />
+          {registerFormik.touched.name && registerFormik.errors.name && (
+            <div className="invalid-feedback">{registerFormik.errors.name}</div>
+          )}
+        </div>
+
+       
+        <div className="mb-3">
+          <label htmlFor="email" className="form-label">
+            Email
+          </label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            className={`form-control ${
+              registerFormik.touched.email && registerFormik.errors.email
+                ? "is-invalid"
+                : ""
+            }`}
+            value={registerFormik.values.email}
+            onChange={registerFormik.handleChange}
+            onBlur={registerFormik.handleBlur}
+          />
+          {registerFormik.touched.email && registerFormik.errors.email && (
+            <div className="invalid-feedback">{registerFormik.errors.email}</div>
+          )}
+        </div>
+
+        
+        <div className="mb-3">
+          <label htmlFor="password" className="form-label">
+            Password
+          </label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            className={`form-control ${
+              registerFormik.touched.password && registerFormik.errors.password
+                ? "is-invalid"
+                : ""
+            }`}
+            value={registerFormik.values.password}
+            onChange={registerFormik.handleChange}
+            onBlur={registerFormik.handleBlur}
+          />
+          {registerFormik.touched.password && registerFormik.errors.password && (
+            <div className="invalid-feedback">
+              {registerFormik.errors.password}
+            </div>
+          )}
+        </div>
+
+        
+        <div className="mb-3">
+          <label htmlFor="rePassword" className="form-label">
+            Confirm Password
+          </label>
+          <input
+            type="password"
+            id="rePassword"
+            name="rePassword"
+            className={`form-control ${
+              registerFormik.touched.rePassword &&
+              registerFormik.errors.rePassword
+                ? "is-invalid"
+                : ""
+            }`}
+            value={registerFormik.values.rePassword}
+            onChange={registerFormik.handleChange}
+            onBlur={registerFormik.handleBlur}
+          />
+          {registerFormik.touched.rePassword &&
+            registerFormik.errors.rePassword && (
+              <div className="invalid-feedback">
+                {registerFormik.errors.rePassword}
+              </div>
+            )}
+        </div>
+
+  
+        <div className="d-flex">
+          <button
+            type="submit"
+            className="btn btn-primary w-100"
+            disabled={!registerFormik.isValid || isLoading}
+          >
+            {isLoading ? <i className="fas fa-spinner fa-spin"></i> : "Register"}
+          </button>
+          <button
+            type="button"
+            className="btn btn-secondary ms-3"
+            onClick={registerFormik.handleReset}
+            disabled={!registerFormik.dirty || isLoading}
+          >
+            Reset
+          </button>
+        </div>
       </form>
     </div>
   );
